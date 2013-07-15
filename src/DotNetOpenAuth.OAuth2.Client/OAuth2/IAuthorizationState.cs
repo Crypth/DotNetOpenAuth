@@ -12,6 +12,7 @@ namespace DotNetOpenAuth.OAuth2 {
 	/// Provides access to a persistent object that tracks the state of an authorization.
 	/// </summary>
 	public interface IAuthorizationState {
+        IDictionary<string, string> ExtraData { get; set; }
 		/// <summary>
 		/// Gets or sets the callback URL used to obtain authorization.
 		/// </summary>

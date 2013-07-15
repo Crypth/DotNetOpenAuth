@@ -25,7 +25,7 @@ namespace DotNetOpenAuth.OAuth2 {
 				this.Scope.AddRange(scopes);
 			}
 		}
-
+        public IDictionary<string, string> ExtraData { get; set; }
 		/// <summary>
 		/// Gets or sets the callback URL used to obtain authorization.
 		/// </summary>
