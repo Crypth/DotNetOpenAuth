@@ -14,7 +14,8 @@ namespace DotNetOpenAuth.OAuth2 {
 	/// A simple in-memory copy of an authorization state.
 	/// </summary>
 	[Serializable]
-	public class AuthorizationState : IAuthorizationState {
+	public class AuthorizationState : IAuthorizationState
+	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AuthorizationState"/> class.
 		/// </summary>
@@ -25,7 +26,13 @@ namespace DotNetOpenAuth.OAuth2 {
 				this.Scope.AddRange(scopes);
 			}
 		}
-        public IDictionary<string, string> ExtraData { get; set; }
+
+		/// <summary>
+		/// Gets or sets the ExtraData that might exist along when authorizing.
+		/// </summary>
+		/// <value>The Extra Data Dictionary</value>
+		public IDictionary<string, string> ExtraData { get; set; }
+
 		/// <summary>
 		/// Gets or sets the callback URL used to obtain authorization.
 		/// </summary>
