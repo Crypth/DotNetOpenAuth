@@ -4,22 +4,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace DotNetOpenAuth.ApplicationBlock {
+namespace DotNetOpenAuth.ApplicationBlock
+{
 	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Net;
 	using System.Net.Http;
-	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Web;
 	using DotNetOpenAuth.Messaging;
 	using DotNetOpenAuth.OAuth2;
 
-	public class FacebookClient : WebServerClient {
-		private static readonly AuthorizationServerDescription FacebookDescription = new AuthorizationServerDescription {
+	public class FacebookClient : WebServerClient
+	{
+		private static readonly AuthorizationServerDescription FacebookDescription = new AuthorizationServerDescription
+		{
 			TokenEndpoint = new Uri("https://graph.facebook.com/oauth/access_token"),
 			AuthorizationEndpoint = new Uri("https://graph.facebook.com/oauth/authorize"),
 			ProtocolVersion = ProtocolVersion.V20
@@ -28,19 +26,56 @@ namespace DotNetOpenAuth.ApplicationBlock {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FacebookClient"/> class.
 		/// </summary>
-		public FacebookClient()
-			: base(FacebookDescription) {
+		public FacebookClient() : base(FacebookDescription) { }
+
+		/// <summary>
+		/// Processes the authorization response from an authorization server, if available. Hides WebClient.ProcessUserAuthorizationAsync
+		/// </summary>
+		/// <param name="request">The incoming HTTP request that may carry an authorization response.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The authorization state that contains the details of the authorization.</returns>
+		public new Task<IAuthorizationState> ProcessUserAuthorizationAsync(HttpRequestBase request = null, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			// Not sexy way of getting the request, but since we can't access this.Channel.GetRequestFromContext(), we go deeper.
+			request = request ?? new HttpRequestWrapper(HttpContext.Current.Request);
+			return this.ProcessUserAuthorizationAsync(request.AsHttpRequestMessage(), cancellationToken);
 		}
 
-		public async Task<IOAuth2Graph> GetGraphAsync(IAuthorizationState authState, string[] fields = null, CancellationToken cancellationToken = default(CancellationToken)) {
-			if ((authState != null) && (authState.AccessToken != null)) {
+		/// <summary>
+		/// Processes the authorization response from an authorization server, if available. Hides WebClient.ProcessUserAuthorizationAsync
+		/// </summary>
+		/// <param name="request">The incoming HTTP request that may carry an authorization response.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <returns>The authorization state that contains the details of the authorization.</returns>
+		public new async Task<IAuthorizationState> ProcessUserAuthorizationAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var z = await base.ProcessUserAuthorizationAsync(request, cancellationToken);
+			if (z != null)
+			{
+				if (z.ExtraData != null)
+				{
+					if (z.ExtraData["expires"] != null)
+					{
+						z.AccessTokenExpirationUtc = DateTime.UtcNow.AddSeconds(double.Parse(z.ExtraData["expires"]));
+					}
+				}
+			}
+			return z;
+		}
+
+		public async Task<IOAuth2Graph> GetGraphAsync(IAuthorizationState authState, string[] fields = null, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if ((authState != null) && (authState.AccessToken != null))
+			{
 				var httpClient = new HttpClient(this.CreateAuthorizingHandler(authState));
 				string fieldsStr = (fields == null) || (fields.Length == 0) ? FacebookGraph.Fields.Defaults : string.Join(",", fields);
 
 				using (
-					var response = await httpClient.GetAsync("https://graph.Facebook.com/me?fields=" + fieldsStr, cancellationToken)) {
+					var response = await httpClient.GetAsync("https://graph.Facebook.com/me?fields=" + fieldsStr, cancellationToken))
+				{
 					response.EnsureSuccessStatusCode();
-					using (var responseStream = await response.Content.ReadAsStreamAsync()) {
+					using (var responseStream = await response.Content.ReadAsStreamAsync())
+					{
 						return FacebookGraph.Deserialize(responseStream);
 					}
 				}
@@ -56,7 +91,8 @@ namespace DotNetOpenAuth.ApplicationBlock {
 		/// This sample includes just a few permissions.  For a complete list of permissions please refer to:
 		/// https://developers.facebook.com/docs/reference/login/
 		/// </remarks>
-		public static class Scopes {
+		public static class Scopes
+		{
 			#region Email Permissions
 			/// <summary>
 			/// Provides access to the user's primary email address in the email property. Do not spam users. Your use of email must comply both with Facebook policies and with the CAN-SPAM Act.

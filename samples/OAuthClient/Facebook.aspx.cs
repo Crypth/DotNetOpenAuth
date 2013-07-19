@@ -1,6 +1,7 @@
 ﻿namespace OAuthClient
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Configuration;
 	using System.Net;
 	using System.Web;
@@ -19,13 +20,19 @@
 		};
 
 		protected void Page_Load(object sender, EventArgs e) {
+			var scopes = new HashSet<string>()
+				{
+					FacebookClient.Scopes.Email,
+					FacebookClient.Scopes.UserAboutMe
+				};
+
 			this.RegisterAsyncTask(
 				new PageAsyncTask(
 					async ct => {
 						IAuthorizationState authorization = await facebookClient.ProcessUserAuthorizationAsync(new HttpRequestWrapper(Request), ct);
 						if (authorization == null) {
 							// Kick off authorization request
-							var request = await facebookClient.PrepareRequestUserAuthorizationAsync(cancellationToken: ct);
+							var request = await facebookClient.PrepareRequestUserAuthorizationAsync(cancellationToken: ct, scopes: scopes);
 							await request.SendAsync(new HttpContextWrapper(Context), ct);
 							this.Context.Response.End();
 
@@ -35,7 +42,7 @@
 							IOAuth2Graph oauth2Graph = await facebookClient.GetGraphAsync(authorization, cancellationToken: ct);
 							//// IOAuth2Graph oauth2Graph = facebookClient.GetGraph(authorization, new[] { FacebookGraph.Fields.Defaults, FacebookGraph.Fields.Email, FacebookGraph.Fields.Picture, FacebookGraph.Fields.Birthday });
 
-							this.nameLabel.Text = HttpUtility.HtmlEncode(oauth2Graph.Name);
+							this.nameLabel.Text = HttpUtility.HtmlEncode(oauth2Graph.Name) + " " + oauth2Graph.Email;
 						}
 					}));
 		}

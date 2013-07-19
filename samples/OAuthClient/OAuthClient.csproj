@@ -26,7 +26,7 @@
     <AssemblyName>OAuthClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -80,6 +80,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="images\Sign-in-with-Twitter-darker.png" />
+    <Content Include="LinkedIn.aspx" />
     <Content Include="SampleWcf2Javascript.html" />
     <Content Include="SampleWcf2Javascript.js" />
     <Content Include="Scripts\jquery-1.6.1.js" />
@@ -128,6 +129,13 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="LinkedIn.aspx.cs">
+      <DependentUpon>LinkedIn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LinkedIn.aspx.designer.cs">
+      <DependentUpon>LinkedIn.aspx</DependentUpon>
     </Compile>
     <Compile Include="SampleWcf2.aspx.cs">
       <DependentUpon>SampleWcf2.aspx</DependentUpon>
@@ -216,16 +224,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>59722</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:59722/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

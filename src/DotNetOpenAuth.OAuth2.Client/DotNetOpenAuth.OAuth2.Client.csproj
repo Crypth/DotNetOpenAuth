@@ -28,6 +28,7 @@
     <Compile Include="OAuth2\ClientCredentialApplicator.cs" />
     <Compile Include="OAuth2\IAuthorizationState.cs" />
     <Compile Include="OAuth2\IClientAuthorizationTracker.cs" />
+    <Compile Include="OAuth2\LinkedInTokenHttpMessageHandler.cs" />
     <Compile Include="OAuth2\Messages\AccessTokenAuthorizationCodeRequestC.cs" />
     <Compile Include="OAuth2\Messages\AccessTokenRefreshRequestC.cs" />
     <Compile Include="OAuth2\Messages\EndUserAuthorizationImplicitRequestC.cs" />

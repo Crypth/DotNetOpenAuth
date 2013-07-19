@@ -109,6 +109,8 @@
     <Compile Include="OAuth2\Google\GoogleClient.cs" />
     <Compile Include="OAuth2\Google\GoogleGraph.cs" />
     <Compile Include="OAuth2\IOAuth2Graph.cs" />
+    <Compile Include="OAuth2\LinkedIn\LinkedInClient.cs" />
+    <Compile Include="OAuth2\LinkedIn\LinkedInJsonGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OAuth1\TwitterConsumer.cs" />
     <Compile Include="Util.cs" />
